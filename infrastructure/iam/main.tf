@@ -81,3 +81,35 @@ resource "aws_iam_policy" "project_read_only" {
     ]
   })
 }
+
+
+
+# IAM Role
+resource "aws_iam_role" "project_read_only_role" {
+  name = "ProjectReadOnlyRole"
+
+  description = "Role for accessing project resources in read-only mode"
+
+  # Defines who can assume this role
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+
+    Statement = [
+      {
+        Effect = "Allow"
+
+        Principal = {
+          AWS = var.trusted_principal_arn
+        }
+
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+# Attach the custom read-only policy to the role
+resource "aws_iam_role_policy_attachment" "project_read_only_attachment" {
+  role       = aws_iam_role.project_read_only_role.name
+  policy_arn = aws_iam_policy.project_read_only.arn
+}
