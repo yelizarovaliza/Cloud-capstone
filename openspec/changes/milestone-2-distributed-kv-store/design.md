@@ -33,7 +33,7 @@ Client -> Public Coordinator API
                +-> Shard 2 internal API
 ```
 
-The proposed implementation uses FastAPI/Python with Pydantic and SQLite-compatible local file storage, because the repository establishes no application stack. These choices are recommendations in Proposed ADR-004/005/006 and must be approved before implementation.
+The Coordinator communicates with Shards through an internal HTTP API supporting CREATE, READ, EXISTS, and DELETE operations. The internal API uses the same table name and partition key as the public API.
 
 ## Decisions
 
@@ -70,11 +70,21 @@ The initial three-t2.small layout is $50.37/month compute-only and exceeds the $
 ### CREATE
 
 1. The Coordinator validates the table and record.
-2. It applies the table record schema.
-3. It hashes the partition key.
+2. It obtains the partition key from the request URL.
+3. It calculates the hash of the table-qualified partition key.
 4. It selects the responsible Shard.
-5. It forwards the CREATE to that Shard.
-6. It returns the successful result or a structured service error.
+5. It forwards the CREATE operation to that Shard.
+6. The Shard creates the record only if the key does not exist.
+7. If the key already exists, the Shard returns a conflict result.
+8. The Coordinator returns the operation result to the Client.
+
+CREATE SHALL NOT overwrite existing records. UPDATE functionality is outside the M2 scope
+
+### Table information retrieval
+
+The Coordinator SHALL provide an API operation to retrieve a registered table definition by its name.
+
+The Coordinator returns the table definition when the table exists and HTTP 404 otherwise.
 
 ### READ / EXISTS / DELETE
 
@@ -82,9 +92,13 @@ These operations use the same partition-key hash and owner lookup as CREATE. DEL
 
 ## Registration
 
-A Shard SHALL send a registration request with a stable `shard_id`, base URL, and optional heartbeat metadata. The Coordinator SHALL validate uniqueness and membership, add virtual nodes, and return the effective ring configuration.
+Each Shard SHALL register with the Coordinator at startup using a stable `shard_id` and its base URL.
 
-Re-registering the same shard SHALL refresh its record but SHALL NOT create duplicate ring entries. Removal SHALL occur through an explicit deregistration operation or heartbeat expiry if implemented and reviewed; M2 SHALL not infer automatic migration.
+The Coordinator SHALL maintain a registry of registered Shards and add their virtual nodes to the consistent-hash ring.
+
+A repeated registration with the same `shard_id` SHALL NOT create duplicate ring entries.
+
+Shard registration and ring membership SHALL support the routing requirements of M2. Additional heartbeat monitoring and automatic failure detection are outside the current scope.
 
 ## Consistency and Failure
 

@@ -3,21 +3,21 @@
 ## 1. Application and API Foundation
 
 - [ ] 1.1 Approve Python/FastAPI, SQLite, REST/OpenAPI, SHA-256, and partition-key ADR decisions; verify the three ADR statuses are Proposed or Accepted by review.
-- [ ] 1.2 Implement a table definition model and validation tests; verify valid and invalid definitions produce specified outcomes.
-- [ ] 1.3 Implement CREATE, READ, EXISTS, and DELETE Coordinator handlers; verify public API integration tests cover success and errors.
+- [ ] 1.2 Implement table registration, table retrieval, and record validation; verify valid, invalid, existing, and missing table scenarios.
+- [ ] 1.3 Implement CREATE, READ, EXISTS, and DELETE Coordinator handlers; verify successful operations, missing records, and duplicate CREATE conflicts.
 - [ ] 1.4 Generate or align runtime API behavior with `docs/api/openapi.yaml`; verify a contract test passes.
 
 ## 2. Coordinator and Sharding
 
-- [ ] 2.1 Implement the shard registry and registration lifecycle; verify unit tests cover registration, duplicate ID, and deregistration.
+- [ ] 2.1 Implement the Shard registry and startup registration; verify registration and repeated registration with the same shard_id.
 - [ ] 2.2 Implement SHA-256 consistent-hash ring with configurable virtual-node count; verify deterministic mapping and ring tests.
 - [ ] 2.3 Route CREATE, READ, EXISTS, and DELETE using the partition key; verify cross-component tests prove identical owner selection.
 - [ ] 2.4 Implement unavailable-shard handling; verify requests fail with the specified 503-style error and no fallback owner is used.
-- [ ] 2.5 Implement Shard internal APIs and local persistence; verify restart and read-after-write tests pass.
+- [ ] 2.5 Implement the Shard internal API for CREATE, READ, EXISTS, and DELETE, together with local persistence; verify internal operations and read-after-write behavior.
 
 ## 3. Testing and Data Guarantees
 
-- [ ] 3.1 Add unit tests for table validation and key-value operations; verify the test suite passes.
+- [ ] 3.1 Add unit tests for table registration, table retrieval, record validation, create-only behavior, and key-value operations; verify the test suite passes.
 - [ ] 3.2 Add ring tests for add/remove membership and key movement; verify existing shard ownership remains stable except for the affected ring range.
 - [ ] 3.3 Add integration tests for registration, routing, read-after-write, and unavailable Shards; verify no data is silently rerouted.
 - [ ] 3.4 Document concurrency limitations and test behavior; verify the documentation matches implemented guarantees.

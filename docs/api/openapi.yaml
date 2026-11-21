@@ -16,23 +16,38 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TableDefinition'
+              $ref: "#/components/schemas/TableDefinition"
       responses:
-        '201':
+        "201":
           description: Table registered
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TableDefinition'
-        '400':
-          $ref: '#/components/responses/Problem'
-        '409':
-          $ref: '#/components/responses/Problem'
+                $ref: "#/components/schemas/TableDefinition"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+  /v1/tables/{tableName}:
+    parameters:
+      - $ref: "#/components/parameters/TableName"
+    get:
+      operationId: getTable
+      summary: Retrieve a table definition
+      responses:
+        "200":
+          description: Table definition
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TableDefinition"
+        "404":
+          $ref: "#/components/responses/Problem"
   /v1/tables/{tableName}/records/{partitionKey}:
     parameters:
-      - $ref: '#/components/parameters/TableName'
-      - $ref: '#/components/parameters/PartitionKey'
-    put:
+      - $ref: "#/components/parameters/TableName"
+      - $ref: "#/components/parameters/PartitionKey"
+    post:
       operationId: createRecord
       summary: Create or replace a record
       requestBody:
@@ -40,58 +55,60 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RecordInput'
+              $ref: "#/components/schemas/RecordInput"
       responses:
-        '200':
+        "200":
           description: Record created or replaced
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Record'
-        '404':
-          $ref: '#/components/responses/Problem'
-        '503':
-          $ref: '#/components/responses/Problem'
+                $ref: "#/components/schemas/Record"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
     get:
       operationId: readRecord
       summary: Read a record
       responses:
-        '200':
-          description: Record found
+        "201":
+          description: Record created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Record'
-        '404':
-          $ref: '#/components/responses/Problem'
-        '503':
-          $ref: '#/components/responses/Problem'
+                $ref: "#/components/schemas/Record"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
     delete:
       operationId: deleteRecord
       summary: Delete a record
       responses:
-        '204':
+        "204":
           description: Record deleted
-        '404':
-          $ref: '#/components/responses/Problem'
-        '503':
-          $ref: '#/components/responses/Problem'
+        "404":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
   /v1/tables/{tableName}/records/{partitionKey}/exists:
     parameters:
-      - $ref: '#/components/parameters/TableName'
-      - $ref: '#/components/parameters/PartitionKey'
+      - $ref: "#/components/parameters/TableName"
+      - $ref: "#/components/parameters/PartitionKey"
     get:
       operationId: existsRecord
       summary: Check whether a record exists
       responses:
-        '200':
+        "200":
           description: Existence result
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ExistsResult'
-        '503':
-          $ref: '#/components/responses/Problem'
+                $ref: "#/components/schemas/ExistsResult"
+        "503":
+          $ref: "#/components/responses/Problem"
   /v1/internal/shards/register:
     post:
       operationId: registerShard
@@ -102,24 +119,77 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ShardRegistration'
+              $ref: "#/components/schemas/ShardRegistration"
       responses:
-        '200':
+        "200":
           description: Registration refreshed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ShardRegistrationResult'
-        '201':
+                $ref: "#/components/schemas/ShardRegistrationResult"
+        "201":
           description: Shard registered
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ShardRegistrationResult'
-        '400':
-          $ref: '#/components/responses/Problem'
+                $ref: "#/components/schemas/ShardRegistrationResult"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+    /v1/internal/tables/{tableName}/records/{partitionKey}:
+    parameters:
+      - $ref: '#/components/parameters/TableName'
+      - $ref: '#/components/parameters/PartitionKey'
+    post:
+      operationId: shardCreateRecord
+      summary: Create a record on the Shard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordInput'
+      responses:
+        '201':
+          description: Record created
         '409':
           $ref: '#/components/responses/Problem'
+    get:
+      operationId: shardReadRecord
+      summary: Read a record from the Shard
+      responses:
+        '200':
+          description: Record found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Record'
+        '404':
+          $ref: '#/components/responses/Problem'
+    delete:
+      operationId: shardDeleteRecord
+      summary: Delete a record from the Shard
+      responses:
+        '204':
+          description: Record deleted
+        '404':
+          $ref: '#/components/responses/Problem'
+
+  /v1/internal/tables/{tableName}/records/{partitionKey}/exists:
+    parameters:
+      - $ref: '#/components/parameters/TableName'
+      - $ref: '#/components/parameters/PartitionKey'
+    get:
+      operationId: shardExistsRecord
+      summary: Check record existence on the Shard
+      responses:
+        '200':
+          description: Existence result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExistsResult'
 components:
   parameters:
     TableName:
@@ -130,7 +200,7 @@ components:
         type: string
         minLength: 1
         maxLength: 128
-        pattern: '^[A-Za-z][A-Za-z0-9_-]*$'
+        pattern: "^[A-Za-z][A-Za-z0-9_-]*$"
     PartitionKey:
       name: partitionKey
       in: path
@@ -170,10 +240,6 @@ components:
         value:
           type: object
           additionalProperties: true
-        partitionKey:
-          type: string
-          minLength: 1
-          maxLength: 1024
     Record:
       type: object
       additionalProperties: false
@@ -262,4 +328,4 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/Problem'
+            $ref: "#/components/schemas/Problem"

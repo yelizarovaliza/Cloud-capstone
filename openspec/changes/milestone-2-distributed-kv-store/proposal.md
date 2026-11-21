@@ -10,7 +10,8 @@ This proposal preserves the Milestone 1 AWS region, CIDR layout, Terraform decis
 
 - Add a single-node Coordinator that registers Shards and routes key operations.
 - Add two or more independent Shards with local key-value storage.
-- Add a REST/OpenAPI client API and a separate internal shard registration API.
+- Add a REST/OpenAPI client API for table registration, table information retrieval, and record operations.
+- Add an internal Shard API for CREATE, READ, EXISTS, and DELETE operations, plus Shard registration.
 - Add a consistent-hash ring with virtual nodes and deterministic key routing.
 - Define infrastructure, security, budget, CI/CD, testing, and YCSB requirements.
 - Add proposed ADR-004 through ADR-006 for review.
@@ -41,10 +42,10 @@ This proposal preserves the Milestone 1 AWS region, CIDR layout, Terraform decis
 
 ## Functional Requirements
 
-1. The system SHALL support table registration, record CRUD, and Shard registration.
-2. The Coordinator SHALL implement EXISTS, CREATE, DELETE, and READ operations.
+1. The system SHALL support table registration, table information retrieval, record CRUD operations, and Shard registration.
+2. The Coordinator SHALL implement EXISTS, CREATE, DELETE, and READ operations. CREATE SHALL NOT overwrite an existing record.
 3. A CREATE or DELETE SHALL route using the partition key and SHALL target the same responsible Shard that a subsequent READ would select.
-4. Shards SHALL register once or repeatedly as needed and SHALL expose local operations to the Coordinator.
+4. Shards SHALL register with the Coordinator at startup and SHALL expose local operations to the Coordinator through an internal API.
 5. The Coordinator SHALL maintain a deterministic hash ring and SHALL not route to unregistered or unavailable Shards.
 6. The infrastructure SHALL reuse the Milestone 1 VPC where approved and SHALL minimize cost.
 7. CI/CD SHALL validate IaC and application changes and SHALL require explicit authorization before deployment.
@@ -64,7 +65,7 @@ This proposal preserves the Milestone 1 AWS region, CIDR layout, Terraform decis
 
 1. The change contains proposal, design, tasks, and six testable capability specifications.
 2. All assignment requirements are mapped to specification sections and verification methods.
-3. The OpenAPI document validates and covers public and Shard registration operations.
+3. The OpenAPI document validates and covers table registration, table retrieval, public record operations, internal Shard operations, and Shard registration.
 4. ADR-004 through ADR-006 exist with Proposed status.
 5. No Milestone 1 file is overwritten and no Terraform or application source code is added.
 6. `openspec validate` passes for the change.

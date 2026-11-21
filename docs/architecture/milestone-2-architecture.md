@@ -28,15 +28,29 @@ The public API is defined in `docs/api/openapi.yaml`.
 
 It includes:
 
-- `POST /v1/tables`
-- `PUT /v1/tables/{tableName}/records/{partitionKey}`
-- `GET /v1/tables/{tableName}/records/{partitionKey}`
-- `GET /v1/tables/{tableName}/records/{partitionKey}/exists`
-- `DELETE /v1/tables/{tableName}/records/{partitionKey}`
+- `POST /v1/tables` — register a table.
+- `GET /v1/tables/{tableName}` — retrieve a table definition.
+- `POST /v1/tables/{tableName}/records/{partitionKey}` — create a new record.
+- `GET /v1/tables/{tableName}/records/{partitionKey}` — read a record.
+- `GET /v1/tables/{tableName}/records/{partitionKey}/exists` — check record existence.
+- `DELETE /v1/tables/{tableName}/records/{partitionKey}` — delete a record.
+
+CREATE does not overwrite an existing record. A duplicate CREATE returns HTTP 409.
+
+The partition key is provided only in the URL and is not duplicated in the request body.
 
 Shard registration is exposed on the private interface:
 
 - `POST /v1/internal/shards/register`
+
+The internal Shard API supports:
+
+- `POST /v1/internal/tables/{tableName}/records/{partitionKey}` — create a record.
+- `GET /v1/internal/tables/{tableName}/records/{partitionKey}` — read a record.
+- `GET /v1/internal/tables/{tableName}/records/{partitionKey}/exists` — check record existence.
+- `DELETE /v1/internal/tables/{tableName}/records/{partitionKey}` — delete a record.
+
+The Coordinator forwards key operations to the responsible Shard through this internal API.
 
 ## 4. Coordinator Responsibilities
 
