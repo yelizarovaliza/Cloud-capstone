@@ -1,0 +1,265 @@
+openapi: 3.1.0
+info:
+  title: Cloud Capstone Distributed Key-Value API
+  version: 0.2.0
+  description: Proposed Milestone 2 REST contract. This document is not an implementation.
+servers:
+  - url: https://coordinator.example.invalid
+    description: Placeholder public Coordinator URL
+paths:
+  /v1/tables:
+    post:
+      operationId: registerTable
+      summary: Register a table definition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TableDefinition'
+      responses:
+        '201':
+          description: Table registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TableDefinition'
+        '400':
+          $ref: '#/components/responses/Problem'
+        '409':
+          $ref: '#/components/responses/Problem'
+  /v1/tables/{tableName}/records/{partitionKey}:
+    parameters:
+      - $ref: '#/components/parameters/TableName'
+      - $ref: '#/components/parameters/PartitionKey'
+    put:
+      operationId: createRecord
+      summary: Create or replace a record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordInput'
+      responses:
+        '200':
+          description: Record created or replaced
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Record'
+        '404':
+          $ref: '#/components/responses/Problem'
+        '503':
+          $ref: '#/components/responses/Problem'
+    get:
+      operationId: readRecord
+      summary: Read a record
+      responses:
+        '200':
+          description: Record found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Record'
+        '404':
+          $ref: '#/components/responses/Problem'
+        '503':
+          $ref: '#/components/responses/Problem'
+    delete:
+      operationId: deleteRecord
+      summary: Delete a record
+      responses:
+        '204':
+          description: Record deleted
+        '404':
+          $ref: '#/components/responses/Problem'
+        '503':
+          $ref: '#/components/responses/Problem'
+  /v1/tables/{tableName}/records/{partitionKey}/exists:
+    parameters:
+      - $ref: '#/components/parameters/TableName'
+      - $ref: '#/components/parameters/PartitionKey'
+    get:
+      operationId: existsRecord
+      summary: Check whether a record exists
+      responses:
+        '200':
+          description: Existence result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExistsResult'
+        '503':
+          $ref: '#/components/responses/Problem'
+  /v1/internal/shards/register:
+    post:
+      operationId: registerShard
+      summary: Register or refresh a Shard
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShardRegistration'
+      responses:
+        '200':
+          description: Registration refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShardRegistrationResult'
+        '201':
+          description: Shard registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShardRegistrationResult'
+        '400':
+          $ref: '#/components/responses/Problem'
+        '409':
+          $ref: '#/components/responses/Problem'
+components:
+  parameters:
+    TableName:
+      name: tableName
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 128
+        pattern: '^[A-Za-z][A-Za-z0-9_-]*$'
+    PartitionKey:
+      name: partitionKey
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 1024
+  schemas:
+    TableDefinition:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - primaryKey
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 128
+        primaryKey:
+          type: string
+          enum:
+            - partitionKey
+        fields:
+          type: object
+          additionalProperties:
+            type: string
+        description:
+          type: string
+    RecordInput:
+      type: object
+      additionalProperties: false
+      required:
+        - value
+      properties:
+        value:
+          type: object
+          additionalProperties: true
+        partitionKey:
+          type: string
+          minLength: 1
+          maxLength: 1024
+    Record:
+      type: object
+      additionalProperties: false
+      required:
+        - tableName
+        - partitionKey
+        - value
+      properties:
+        tableName:
+          type: string
+        partitionKey:
+          type: string
+        value:
+          type: object
+          additionalProperties: true
+    ExistsResult:
+      type: object
+      additionalProperties: false
+      required:
+        - tableName
+        - partitionKey
+        - exists
+      properties:
+        tableName:
+          type: string
+        partitionKey:
+          type: string
+        exists:
+          type: boolean
+    ShardRegistration:
+      type: object
+      additionalProperties: false
+      required:
+        - shardId
+        - baseUrl
+      properties:
+        shardId:
+          type: string
+          minLength: 1
+          maxLength: 128
+        baseUrl:
+          type: string
+          format: uri
+        heartbeatIntervalSeconds:
+          type: integer
+          minimum: 1
+          maximum: 3600
+    ShardRegistrationResult:
+      type: object
+      additionalProperties: false
+      required:
+        - shardId
+        - registered
+        - virtualNodeCount
+      properties:
+        shardId:
+          type: string
+        registered:
+          type: boolean
+        virtualNodeCount:
+          type: integer
+          minimum: 128
+          maximum: 128
+    Problem:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - title
+        - status
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+  responses:
+    Problem:
+      description: A structured API error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
