@@ -16,6 +16,11 @@ class ShardHttpClient:
     timeout = 5.0
 
     @staticmethod
+    def __init__(
+            self,
+            transport: httpx.BaseTransport | None = None,
+        ) -> None:
+            self.transport = transport
     def _record_path(
         base_url: str,
         table_name: str,
@@ -140,8 +145,3 @@ class ShardHttpClient:
 
         response.raise_for_status()
         return response.status_code == 204
-    def __init__(
-        self,
-        transport: httpx.BaseTransport | None = None,
-    ) -> None:
-        self.transport = transport
