@@ -34,7 +34,10 @@ class ShardHttpClient:
         **kwargs,
     ) -> httpx.Response:
         try:
-            with httpx.Client(timeout=self.timeout) as client:
+            with httpx.Client(
+                timeout=self.timeout,
+                transport=self.transport,
+            ) as client:
                 response = client.request(
                     method,
                     url,
@@ -137,3 +140,8 @@ class ShardHttpClient:
 
         response.raise_for_status()
         return response.status_code == 204
+    def __init__(
+        self,
+        transport: httpx.BaseTransport | None = None,
+    ) -> None:
+        self.transport = transport

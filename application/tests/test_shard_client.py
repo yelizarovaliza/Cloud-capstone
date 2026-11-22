@@ -3,6 +3,10 @@ import pytest
 
 from app.services.record_errors import ShardUnavailableError
 from app.services.shard_client import ShardHttpClient
+from app.schemas.shard import ShardRegistration
+from app.services.routing_record_backend import RoutingRecordBackend
+from app.services.shard_registry import ShardRegistry
+from app.services.shard_router import ShardRouter
 
 
 def test_server_error_raises_shard_unavailable():
@@ -21,13 +25,6 @@ def test_server_error_raises_shard_unavailable():
             "Users",
             "user-1",
         )
-
-
-from app.schemas.shard import ShardRegistration
-from app.services.routing_record_backend import RoutingRecordBackend
-from app.services.shard_registry import ShardRegistry
-from app.services.shard_router import ShardRouter
-
 
 def test_unavailable_responsible_shard_has_no_fallback():
     requested_urls = []
@@ -85,3 +82,4 @@ def test_connection_error_raises_shard_unavailable():
             "Users",
             "user-1",
         )
+        
