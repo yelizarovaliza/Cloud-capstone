@@ -17,10 +17,10 @@
 
 ## 3. Testing and Data Guarantees
 
-- [ ] 3.1 Add unit tests for table registration, table retrieval, record validation, create-only behavior, and key-value operations; verify the test suite passes.
-- [ ] 3.2 Add ring tests for add/remove membership and key movement; verify existing shard ownership remains stable except for the affected ring range.
-- [ ] 3.3 Add integration tests for registration, routing, read-after-write, and unavailable Shards; verify no data is silently rerouted.
-- [ ] 3.4 Document concurrency limitations and test behavior; verify the documentation matches implemented guarantees.
+- [x] 3.1 Add unit tests for table registration, table retrieval, record validation, create-only behavior, and key-value operations; verify the test suite passes.
+- [x] 3.2 Add ring tests for add/remove membership and key movement; verify existing shard ownership remains stable except for the affected ring range.
+- [x] 3.3 Add integration tests for registration, routing, read-after-write, and unavailable Shards; verify no data is silently rerouted.
+- [x] 3.4 Document concurrency limitations and test behavior; verify the documentation matches implemented guarantees.
 
 ## 4. Infrastructure
 
