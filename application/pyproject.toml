@@ -5,19 +5,20 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "cloud-capstone-application"
 version = "0.1.0"
-description = "Application scaffold for the Cloud Capstone project"
-requires-python = ">=3.10"
+description = "A lightweight distributed key-value store"
+requires-python = ">=3.11"
 dependencies = [
-    "fastapi>=0.110,<1.0",
-    "uvicorn[standard]>=0.27,<1.0",
+    "fastapi>=0.115,<1.0",
+    "uvicorn[standard]>=0.30,<1.0",
 ]
 
 [project.optional-dependencies]
 test = [
     "httpx>=0.27,<1.0",
-    "pytest>=8.0,<9.0",
+    "pytest>=8,<10",
 ]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+python_files = ["test_*.py"]

@@ -2,7 +2,14 @@
 
 ## 1. Status
 
-Proposed. No application code or AWS M2 resources have been implemented or deployed.
+The M2 technology stack and architecture decisions ADR-004,
+ADR-005, and ADR-006 are Accepted.
+
+The initial Python application scaffold has been created
+with FastAPI and a basic health-check endpoint.
+
+The Coordinator, Shards, key-value operations, and M2 AWS
+resources have not yet been implemented or deployed.
 
 ## 2. Logical Architecture
 
