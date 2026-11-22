@@ -16,10 +16,10 @@ class ShardHttpClient:
     timeout = 5.0
 
     def __init__(
-            self,
-            transport: httpx.BaseTransport | None = None,
-        ) -> None:
-            self.transport = transport
+        self,
+        transport: httpx.BaseTransport | None = None,
+    ) -> None:
+        self.transport = transport
 
     @staticmethod
     def _record_path(
