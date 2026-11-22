@@ -155,11 +155,49 @@ def test_invalid_record_body_returns_400(client):
     assert response.status_code == 400
 
 
-def test_unavailable_shard_returns_503(client):
+@pytest.mark.parametrize(
+    ("method", "path", "json"),
+    [
+        (
+            "POST",
+            "/v1/tables/Users/records/user-1",
+            {"value": {"name": "test"}},
+        ),
+        (
+            "GET",
+            "/v1/tables/Users/records/user-1",
+            None,
+        ),
+        (
+            "GET",
+            "/v1/tables/Users/records/user-1/exists",
+            None,
+        ),
+        (
+            "DELETE",
+            "/v1/tables/Users/records/user-1",
+            None,
+        ),
+    ],
+)
+def test_unavailable_shard_returns_503(
+    client,
+    method,
+    path,
+    json,
+):
     from app.services.record_service import UnavailableRecordBackend
 
     record_service.backend = UnavailableRecordBackend()
 
-    response = client.get("/v1/tables/Users/records/user-1")
+    response = client.request(
+        method,
+        path,
+        json=json,
+    )
 
     assert response.status_code == 503
+    assert response.headers["content-type"].startswith(
+        "application/problem+json"
+    )
+    assert response.json()["status"] == 503

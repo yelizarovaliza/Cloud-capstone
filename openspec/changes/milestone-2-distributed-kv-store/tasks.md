@@ -11,8 +11,8 @@
 
 - [x] 2.1 Implement the Shard registry and startup registration; verify registration and repeated registration with the same shard_id.
 - [x] 2.2 Implement SHA-256 consistent-hash ring with configurable virtual-node count; verify deterministic mapping and ring tests.
-- [ ] 2.3 Route CREATE, READ, EXISTS, and DELETE using the partition key; verify cross-component tests prove identical owner selection.
-- [ ] 2.4 Implement unavailable-shard handling; verify requests fail with the specified 503-style error and no fallback owner is used.
+- [x] 2.3 Route CREATE, READ, EXISTS, and DELETE using the partition key; verify cross-component tests prove identical owner selection.
+- [x] 2.4 Implement unavailable-shard handling; verify requests fail with the specified 503-style error and no fallback owner is used.
 - [ ] 2.5 Implement the Shard internal API for CREATE, READ, EXISTS, and DELETE, together with local persistence; verify internal operations and read-after-write behavior.
 
 ## 3. Testing and Data Guarantees
