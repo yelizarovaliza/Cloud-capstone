@@ -41,6 +41,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/TableDefinition"
+        "400":
+          $ref: "#/components/responses/Problem"
         "404":
           $ref: "#/components/responses/Problem"
   /v1/tables/{tableName}/records/{partitionKey}:
@@ -63,6 +65,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Record"
+        "400":
+          $ref: "#/components/responses/Problem"
         "409":
           $ref: "#/components/responses/Problem"
         "404":
@@ -79,6 +83,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Record"
+        "400":
+          $ref: "#/components/responses/Problem"
         "404":
           $ref: "#/components/responses/Problem"
         "503":
@@ -89,6 +95,8 @@ paths:
       responses:
         "204":
           description: Record deleted
+        "400":
+          $ref: "#/components/responses/Problem"
         "404":
           $ref: "#/components/responses/Problem"
         "503":
@@ -107,6 +115,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ExistsResult"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
         "503":
           $ref: "#/components/responses/Problem"
   /v1/internal/shards/register:

@@ -102,6 +102,7 @@ def read_record(
     response_model_by_alias=True,
     responses={
         400: {"description": "Invalid request"},
+        404: {"description": "Table not found"},
         503: {"description": "Shard unavailable"},
     },
 )
