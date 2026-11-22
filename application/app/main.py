@@ -1,9 +1,11 @@
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
+from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 
 from app.api.routes.health import router as health_router
 from app.api.routes.tables import router as tables_router
+from app.api.routes.records import router as records_router
 from app.core.config import settings
 
 
@@ -35,3 +37,28 @@ async def validation_exception_handler(
 
 app.include_router(health_router)
 app.include_router(tables_router)
+app.include_router(records_router)
+
+
+def custom_openapi() -> dict:
+    if app.openapi_schema:
+        return app.openapi_schema
+
+    openapi_schema = get_openapi(
+        title=app.title,
+        version=app.version,
+        description=app.description,
+        routes=app.routes,
+        openapi_version=app.openapi_version,
+    )
+
+    for path_item in openapi_schema["paths"].values():
+        for operation in path_item.values():
+            if isinstance(operation, dict):
+                operation.get("responses", {}).pop("422", None)
+
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+app.openapi = custom_openapi

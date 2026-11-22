@@ -32,6 +32,10 @@ def problem_response(
     response_model=TableDefinition,
     response_model_by_alias=True,
     response_model_exclude_none=True,
+    responses={
+        400: {"description": "Invalid table definition"},
+        409: {"description": "Table already exists"},
+    },
 )
 def register_table(table: TableDefinition):
     """Register a new table definition."""
@@ -47,13 +51,18 @@ def register_table(table: TableDefinition):
 
 
 @router.get(
-    "/{table_name}",
+    "/{tableName}",
     response_model=TableDefinition,
     response_model_by_alias=True,
     response_model_exclude_none=True,
+    responses={
+        400: {"description": "Invalid table name"},
+        404: {"description": "Table not found"},
+    },
 )
 def get_table(
-    table_name: str = Path(
+    tableName: str = Path(
+        alias="tableName",
         min_length=1,
         max_length=128,
         pattern=TABLE_NAME_PATTERN,
@@ -61,13 +70,13 @@ def get_table(
 ):
     """Retrieve a registered table definition."""
 
-    table = table_registry.get(table_name)
+    table = table_registry.get(tableName)
 
     if table is None:
         return problem_response(
             status_code=status.HTTP_404_NOT_FOUND,
             title="Table not found",
-            detail=f"Table '{table_name}' is not registered.",
+            detail=f"Table '{tableName}' is not registered.",
         )
 
     return table
