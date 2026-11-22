@@ -160,3 +160,89 @@ def test_lookup_wraps_around_to_first_ring_point(monkeypatch):
 def test_invalid_virtual_node_count_is_rejected():
     with pytest.raises(ValueError):
         ConsistentHashRing(virtual_nodes_per_shard=0)
+
+
+def test_adding_shard_moves_only_keys_to_the_new_shard():
+    ring = ConsistentHashRing()
+
+    ring.add_shard("shard-1")
+    ring.add_shard("shard-2")
+
+    keys = [f"record-{index}" for index in range(5000)]
+
+    owners_before = {
+        key: ring.get_shard("Users", key)
+        for key in keys
+    }
+
+    ring.add_shard("shard-3")
+
+    owners_after = {
+        key: ring.get_shard("Users", key)
+        for key in keys
+    }
+
+    moved_keys = [
+        key
+        for key in keys
+        if owners_before[key] != owners_after[key]
+    ]
+
+    assert moved_keys
+
+    assert all(
+        owners_after[key] == "shard-3"
+        for key in moved_keys
+    )
+
+    assert all(
+        owners_before[key] == owners_after[key]
+        for key in keys
+        if key not in moved_keys
+    )
+
+
+def test_removing_shard_moves_only_its_keys():
+    ring = ConsistentHashRing()
+
+    ring.add_shard("shard-1")
+    ring.add_shard("shard-2")
+    ring.add_shard("shard-3")
+
+    keys = [f"record-{index}" for index in range(5000)]
+
+    owners_before = {
+        key: ring.get_shard("Users", key)
+        for key in keys
+    }
+
+    ring.remove_shard("shard-2")
+
+    owners_after = {
+        key: ring.get_shard("Users", key)
+        for key in keys
+    }
+
+    moved_keys = [
+        key
+        for key in keys
+        if owners_before[key] != owners_after[key]
+    ]
+
+    assert moved_keys
+
+    assert all(
+        owners_before[key] == "shard-2"
+        for key in moved_keys
+    )
+
+    assert all(
+        owner != "shard-2"
+        for owner in owners_after.values()
+    )
+
+    assert all(
+        owners_before[key] == owners_after[key]
+        for key in keys
+        if owners_before[key] != "shard-2"
+    )
