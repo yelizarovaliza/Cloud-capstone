@@ -4,8 +4,8 @@
 
 - [x] 1.1 Approve Python/FastAPI, SQLite, REST/OpenAPI, SHA-256, and partition-key ADR decisions; verify the three ADR statuses are Proposed or Accepted by review.
 - [x] 1.2 Implement table registration, table retrieval, and record validation; verify valid, invalid, existing, and missing table scenarios.
-- [ ] 1.3 Implement CREATE, READ, EXISTS, and DELETE Coordinator handlers; verify successful operations, missing records, and duplicate CREATE conflicts.
-- [ ] 1.4 Generate or align runtime API behavior with `docs/api/openapi.yaml`; verify a contract test passes.
+- [x] 1.3 Implement CREATE, READ, EXISTS, and DELETE Coordinator handlers; verify successful operations, missing records, and duplicate CREATE conflicts.
+- [x] 1.4 Generate or align runtime API behavior with `docs/api/openapi.yaml`; verify a contract test passes.
 
 ## 2. Coordinator and Sharding
 

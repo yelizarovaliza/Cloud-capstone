@@ -7,12 +7,11 @@ from app.api.routes.health import router as health_router
 from app.api.routes.tables import router as tables_router
 from app.api.routes.records import router as records_router
 from app.core.config import settings
-
+from app.api.routes.shards import router as shards_router
 
 app = FastAPI(
     title=settings.app_name,
     version="0.1.0",
-    openapi_version="3.1.0",
     description="A lightweight distributed key-value store.",
 )
 
@@ -38,7 +37,7 @@ async def validation_exception_handler(
 app.include_router(health_router)
 app.include_router(tables_router)
 app.include_router(records_router)
-
+app.include_router(shards_router)
 
 def custom_openapi() -> dict:
     if app.openapi_schema:
@@ -49,7 +48,7 @@ def custom_openapi() -> dict:
         version=app.version,
         description=app.description,
         routes=app.routes,
-        openapi_version=app.openapi_version,
+        openapi_version="3.1.0",
     )
 
     for path_item in openapi_schema["paths"].values():
