@@ -1,6 +1,6 @@
 # ADR-005: Hash Function and Virtual Nodes
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-11-22
 - **Decision:** SHA-256 and 128 virtual nodes per Shard
 
@@ -71,7 +71,3 @@ Trade-offs:
 
 - Existing data is not migrated.
 - Virtual-node count is tunable but changing it changes future routing.
-
-## 6. Review Required
-
-This decision is Proposed and requires human approval before implementation or benchmark baselining.

@@ -1,6 +1,6 @@
 # ADR-006: Partition Key Strategy
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-11-22
 - **Decision:** Use a single opaque partition key
 
@@ -70,7 +70,3 @@ Trade-offs:
 
 - Sort-key grouping is unavailable.
 - Key strings may expose application identifiers in logs unless logging treats them as sensitive or high-cardinality.
-
-## 6. Review Required
-
-This decision is Proposed and requires human approval before application implementation.

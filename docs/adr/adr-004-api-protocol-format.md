@@ -1,6 +1,6 @@
 # ADR-004: API Protocol and Format
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-11-22
 - **Decision:** HTTP REST with JSON and OpenAPI 3.1
 
@@ -72,7 +72,3 @@ Trade-offs:
 
 - REST cannot enforce a binary transport contract.
 - Read/write behavior remains subject to network latency and application implementation.
-
-## 6. Review Required
-
-This decision is Proposed and requires human approval before application implementation.
