@@ -6,7 +6,7 @@
 
 ## 1. Context
 
-Milestone 2 requires a client-facing API, table registration, CRUD operations, and Shard registration. The repository does not establish a public API technology stack.
+Milestone 2 requires a client-facing API, table registration, CREATE, READ, EXISTS, and DELETE record operations, and Shard registration. The repository does not establish a public API technology stack.
 
 ## 2. Decision Drivers
 
@@ -51,7 +51,7 @@ Advantages:
 
 Disadvantages:
 
-- Mutation and record CRUD require only a small fixed API.
+- Record creation, retrieval, existence checks, and deletion require only a small fixed API.
 - Introduces schema and resolver complexity without a demonstrated benefit.
 
 ## 4. Proposed Decision

@@ -41,7 +41,7 @@ The Coordinator communicates with Shards through an internal HTTP API supporting
 
 The proposed public protocol is HTTP/JSON and OpenAPI 3.1. The Shard registration and internal operations use the same protocol with private network-only paths.
 
-Alternative: gRPC offers stronger contracts but adds implementation and tooling complexity. GraphQL is unnecessary for a small CRUD data model.
+Alternative: gRPC offers stronger contracts but adds implementation and tooling complexity. GraphQL is unnecessary for a small, fixed set of record operations.
 
 ### Partition Key
 
@@ -49,7 +49,7 @@ The proposed primary key is a caller-supplied opaque `partition_key`. A compound
 
 ### Consistent Hashing
 
-The proposed ring uses SHA-256 and 128 virtual nodes per Shard. The ring key is `<shard_id>#<virtual_node_index>` and the lookup key is the UTF-8 partition key.
+The proposed ring uses SHA-256 and 128 virtual nodes per Shard. The ring key is `<shard_id>#<virtual_node_index>`. The lookup key is the UTF-8 encoding of the table-qualified partition key, formed as `<table_name>#<partition_key>`.
 
 Alternatives: MD5 is faster but weaker and not appropriate as a cryptographic choice; Rendezvous hashing avoids a ring but would not demonstrate the assignment's ring concept.
 
@@ -98,7 +98,7 @@ The Coordinator SHALL maintain a registry of registered Shards and add their vir
 
 A repeated registration with the same `shard_id` SHALL NOT create duplicate ring entries.
 
-Shard registration and ring membership SHALL support the routing requirements of M2. Additional heartbeat monitoring and automatic failure detection are outside the current scope.
+Shard registration and ring membership SHALL support the routing requirements of M2.
 
 ## Consistency and Failure
 

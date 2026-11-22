@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Defines the externally observable REST data model and CRUD behavior for Milestone 2.
+Defines the externally observable REST data model and CREATE, READ, EXISTS, and DELETE behavior for Milestone 2.
 
 ## ADDED Requirements
 
@@ -20,6 +20,10 @@ The public API SHALL allow a client to retrieve the definition of an existing ta
 - **WHEN** a client requests a table that does not exist
 - **THEN** the API returns HTTP 404
 
+### Requirement: Table registration
+
+The public API SHALL allow a client to register a valid table definition and SHALL reject invalid or duplicate table definitions.
+
 #### Scenario: Valid table registration
 
 - **WHEN** a client submits a unique table name and valid record schema
@@ -30,11 +34,16 @@ The public API SHALL allow a client to retrieve the definition of an existing ta
 - **WHEN** a client submits an unsupported or incomplete table definition
 - **THEN** the API returns 400 with an RFC 7807 problem response
 
+#### Scenario: Duplicate table registration
+
+- **WHEN** a client submits a table definition with a name that is already registered
+- **THEN** the API returns HTTP 409 and leaves the existing definition unchanged
+
 ### Requirement: Record creation
 
 The public API SHALL create a new record using its table name and partition key.
 
-The API SHALL NOT overwrite an existing record. An attempt to create a record with an existing partition key SHALL return HTTP 409.
+The API SHALL create only new records and SHALL NOT overwrite an existing record. An attempt to create a record with an existing partition key SHALL return HTTP 409.
 
 #### Scenario: Successful create
 

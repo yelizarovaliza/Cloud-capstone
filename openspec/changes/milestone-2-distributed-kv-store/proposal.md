@@ -42,7 +42,7 @@ This proposal preserves the Milestone 1 AWS region, CIDR layout, Terraform decis
 
 ## Functional Requirements
 
-1. The system SHALL support table registration, table information retrieval, record CRUD operations, and Shard registration.
+1. The system SHALL support table registration, table information retrieval, record operations: CREATE, READ, EXISTS, and DELETE, and Shard registration.
 2. The Coordinator SHALL implement EXISTS, CREATE, DELETE, and READ operations. CREATE SHALL NOT overwrite an existing record.
 3. A CREATE or DELETE SHALL route using the partition key and SHALL target the same responsible Shard that a subsequent READ would select.
 4. Shards SHALL register with the Coordinator at startup and SHALL expose local operations to the Coordinator through an internal API.

@@ -7,7 +7,7 @@ Maps the assignment requirements to OpenSpec specifications and future verificat
 | Assignment requirement                     | OpenSpec specification                      | Verification method                                              |
 | ------------------------------------------ | ------------------------------------------- | ---------------------------------------------------------------- |
 | Public API for table registration          | `openspec/changes/.../specs/kv-api/spec.md` | OpenAPI contract test and API integration test                   |
-| Public CRUD operations                     | `kv-api`, `coordinator`                     | API integration tests for CREATE, READ, EXISTS, DELETE           |
+| Public CREATE, READ, EXISTS, and DELETE operations | `kv-api`, `coordinator`               | API integration tests for CREATE, READ, EXISTS, DELETE           |
 | Shard registration and internal operations | `kv-api`, `coordinator`, `sharding`         | Registration and internal API integration tests                  |
 | Compound primary key optional              | ADR-006, `kv-api`, `sharding`               | Verify only partition-key contract is exposed                    |
 | Coordinator EXISTS/CREATE/DELETE/READ      | `coordinator`                               | Handler unit tests and end-to-end API tests                      |

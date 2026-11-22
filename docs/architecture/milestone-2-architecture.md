@@ -64,7 +64,7 @@ Each Shard has a stable ID and independent storage. It registers with the Coordi
 
 ## 6. Routing
 
-The proposed ring uses SHA-256 with 128 virtual nodes per Shard. Ring points are `<shard_id>#<virtual_node_index>`; key lookups use the table-qualified partition key.
+The proposed ring uses SHA-256 with 128 virtual nodes per Shard. Ring points are `<shard_id>#<virtual_node_index>`; key lookups hash the UTF-8 encoding of `<table_name>#<partition_key>`.
 
 CREATE, READ, EXISTS, and DELETE use the same lookup algorithm. The ring can add or remove Shards. Existing data is not moved in M2.
 

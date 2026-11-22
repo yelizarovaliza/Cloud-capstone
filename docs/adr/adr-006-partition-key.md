@@ -6,7 +6,7 @@
 
 ## 1. Context
 
-The assignment permits, but does not require, a compound partition/sort key. A M2 primary-key strategy must be explicit for routing and CRUD behavior.
+The assignment permits, but does not require, a compound partition/sort key. A M2 primary-key strategy must be explicit for routing and CREATE, READ, EXISTS, and DELETE behavior.
 
 ## 2. Decision Drivers
 
@@ -38,7 +38,7 @@ Advantages:
 
 Disadvantages:
 
-- Routing and CRUD semantics become more complex.
+- Routing and record-operation semantics become more complex.
 - Not required for M2.
 - YCSB mapping would require an additional agreed convention.
 
