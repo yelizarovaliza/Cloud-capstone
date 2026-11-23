@@ -24,10 +24,10 @@
 
 ## 4. Infrastructure
 
-- [ ] 4.1 Resolve IAM trust principal and AWS Academy permission blockers; verify deployment prerequisites are documented and approved.
-- [ ] 4.2 Extend Terraform from the M1 network foundation; verify `terraform fmt -check` and `terraform validate` pass.
-- [ ] 4.3 Define Security Groups and instance placement; verify `terraform plan` shows only approved public and private traffic.
-- [ ] 4.4 Run cost and availability checks; verify deployment is blocked until the approved budget alternative is within $20 or additional approval exists.
+- [x] 4.1 Resolve IAM trust principal and AWS Academy permission blockers; verify deployment prerequisites are documented and approved.
+- [x] 4.2 Extend Terraform from the M1 network foundation; verify `terraform fmt -check` and `terraform validate` pass.
+- [x] 4.3 Define Security Groups and instance placement; verify `terraform plan` shows only approved public and private traffic.
+- [x] 4.4 Run cost and availability checks; verify deployment is blocked until the approved budget alternative is within $20 or additional approval exists.
 - [ ] 4.5 Do not run `terraform apply` until approval; verify post-review evidence is required before any deployment task is closed.
 
 ## 5. CI/CD

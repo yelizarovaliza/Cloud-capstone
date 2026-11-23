@@ -28,6 +28,8 @@ and introduce additional permission and deployment requirements.
 
 For Milestone 2, reuse the existing Default VPC:
 
+- Coordinator API: TCP 8000.
+- Shard internal APIs: TCP 8001–8002.
 - VPC: `vpc-0d83c8e68a98370e1`
 - VPC CIDR: `172.31.0.0/16`
 - Region: `us-east-1`
