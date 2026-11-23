@@ -1,9 +1,15 @@
 # Budget Estimate
 
 **AWS Region:** `us-east-1` (N. Virginia)
+
 **Availability Zone:** `us-east-1a`
-**Available AWS Academy Budget:** **$20.00** **Estimate Type:** Indicative On-Demand estimate
+
+**Available AWS Academy Budget:** **$20.00**
+
+**Estimate Type:** Indicative On-Demand estimate
+
 **Workload:** One Coordinator and two Shards (three EC2 instances total)
+
 **Assessment Date:** November 24, 2026
 
 ## 1. Proposed M2 Architecture

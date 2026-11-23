@@ -52,8 +52,6 @@ The Coordinator will use a public-facing Security Group.
 Shard inbound traffic will be restricted to the Coordinator
 Security Group.
 
-Application traffic will use TCP port 8000.
-
 ## 4. Alternatives Considered
 
 ### Dedicated VPC from M1
