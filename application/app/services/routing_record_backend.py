@@ -1,4 +1,3 @@
-
 from typing import Protocol
 
 from app.schemas.record_response import Record
@@ -13,28 +12,33 @@ from app.services.shard_router import (
 
 class ShardClientProtocol(Protocol):
     def create(
-        self, base_url: str, table_name: str,
-        partition_key: str, value: dict,
-    ) -> Record:
-        ...
+        self,
+        base_url: str,
+        table_name: str,
+        partition_key: str,
+        value: dict,
+    ) -> Record: ...
 
     def read(
-        self, base_url: str, table_name: str,
+        self,
+        base_url: str,
+        table_name: str,
         partition_key: str,
-    ) -> Record | None:
-        ...
+    ) -> Record | None: ...
 
     def exists(
-        self, base_url: str, table_name: str,
+        self,
+        base_url: str,
+        table_name: str,
         partition_key: str,
-    ) -> bool:
-        ...
+    ) -> bool: ...
 
     def delete(
-        self, base_url: str, table_name: str,
+        self,
+        base_url: str,
+        table_name: str,
         partition_key: str,
-    ) -> bool:
-        ...
+    ) -> bool: ...
 
 
 class RoutingRecordBackend:
@@ -55,9 +59,7 @@ class RoutingRecordBackend:
                 partition_key,
             )
         except NoRegisteredShardsError as exc:
-            raise ShardUnavailableError(
-                "No responsible Shard is registered."
-            ) from exc
+            raise ShardUnavailableError("No responsible Shard is registered.") from exc
 
         return str(registration.base_url).rstrip("/")
 

@@ -1,4 +1,3 @@
-
 import hashlib
 
 import pytest
@@ -56,9 +55,7 @@ def test_hash_points_use_sha256():
     ring.add_shard("shard-1")
 
     expected_hash = int.from_bytes(
-        hashlib.sha256(
-            b"shard-1#0"
-        ).digest(),
+        hashlib.sha256(b"shard-1#0").digest(),
         byteorder="big",
     )
 
@@ -99,10 +96,13 @@ def test_lookup_is_deterministic_regardless_of_add_order():
 
 
 def test_partition_key_is_table_qualified():
-    assert ConsistentHashRing.qualify_key(
-        "users",
-        "user-123",
-    ) == "users#user-123"
+    assert (
+        ConsistentHashRing.qualify_key(
+            "users",
+            "user-123",
+        )
+        == "users#user-123"
+    )
 
 
 def test_lookup_on_empty_ring_raises_error():
@@ -151,10 +151,13 @@ def test_lookup_wraps_around_to_first_ring_point(monkeypatch):
         lambda value: 2**256,
     )
 
-    assert ring.get_shard(
-        "users",
-        "user-123",
-    ) == first_shard
+    assert (
+        ring.get_shard(
+            "users",
+            "user-123",
+        )
+        == first_shard
+    )
 
 
 def test_invalid_virtual_node_count_is_rejected():
@@ -170,35 +173,20 @@ def test_adding_shard_moves_only_keys_to_the_new_shard():
 
     keys = [f"record-{index}" for index in range(5000)]
 
-    owners_before = {
-        key: ring.get_shard("Users", key)
-        for key in keys
-    }
+    owners_before = {key: ring.get_shard("Users", key) for key in keys}
 
     ring.add_shard("shard-3")
 
-    owners_after = {
-        key: ring.get_shard("Users", key)
-        for key in keys
-    }
+    owners_after = {key: ring.get_shard("Users", key) for key in keys}
 
-    moved_keys = [
-        key
-        for key in keys
-        if owners_before[key] != owners_after[key]
-    ]
+    moved_keys = [key for key in keys if owners_before[key] != owners_after[key]]
 
     assert moved_keys
 
-    assert all(
-        owners_after[key] == "shard-3"
-        for key in moved_keys
-    )
+    assert all(owners_after[key] == "shard-3" for key in moved_keys)
 
     assert all(
-        owners_before[key] == owners_after[key]
-        for key in keys
-        if key not in moved_keys
+        owners_before[key] == owners_after[key] for key in keys if key not in moved_keys
     )
 
 
@@ -211,35 +199,19 @@ def test_removing_shard_moves_only_its_keys():
 
     keys = [f"record-{index}" for index in range(5000)]
 
-    owners_before = {
-        key: ring.get_shard("Users", key)
-        for key in keys
-    }
+    owners_before = {key: ring.get_shard("Users", key) for key in keys}
 
     ring.remove_shard("shard-2")
 
-    owners_after = {
-        key: ring.get_shard("Users", key)
-        for key in keys
-    }
+    owners_after = {key: ring.get_shard("Users", key) for key in keys}
 
-    moved_keys = [
-        key
-        for key in keys
-        if owners_before[key] != owners_after[key]
-    ]
+    moved_keys = [key for key in keys if owners_before[key] != owners_after[key]]
 
     assert moved_keys
 
-    assert all(
-        owners_before[key] == "shard-2"
-        for key in moved_keys
-    )
+    assert all(owners_before[key] == "shard-2" for key in moved_keys)
 
-    assert all(
-        owner != "shard-2"
-        for owner in owners_after.values()
-    )
+    assert all(owner != "shard-2" for owner in owners_after.values())
 
     assert all(
         owners_before[key] == owners_after[key]

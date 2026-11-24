@@ -1,4 +1,3 @@
-
 from app.main import app
 from pathlib import Path
 
@@ -19,10 +18,7 @@ def item_parameter_names(item, components=None):
     for method in ("get", "post", "put", "patch", "delete"):
         if method in item:
             parameters.extend(item[method].get("parameters", []))
-    return {
-        parameter_name(parameter, components)
-        for parameter in parameters
-    }
+    return {parameter_name(parameter, components) for parameter in parameters}
 
 
 def test_runtime_openapi_uses_version_31():
@@ -37,26 +33,19 @@ def test_runtime_openapi_contains_public_record_operations():
 
     assert "/v1/tables/{tableName}/records/{partitionKey}" in paths
 
-    operations = paths[
-        "/v1/tables/{tableName}/records/{partitionKey}"
-    ]
+    operations = paths["/v1/tables/{tableName}/records/{partitionKey}"]
 
     assert "post" in operations
     assert "get" in operations
     assert "delete" in operations
 
-    assert (
-        "/v1/tables/{tableName}/records/{partitionKey}/exists"
-        in paths
-    )
+    assert "/v1/tables/{tableName}/records/{partitionKey}/exists" in paths
 
 
 def test_runtime_openapi_contains_expected_response_codes():
     schema = app.openapi()
 
-    operations = schema["paths"][
-        "/v1/tables/{tableName}/records/{partitionKey}"
-    ]
+    operations = schema["paths"]["/v1/tables/{tableName}/records/{partitionKey}"]
 
     assert "201" in operations["post"]["responses"]
     assert "409" in operations["post"]["responses"]
@@ -99,12 +88,8 @@ def test_runtime_public_paths_match_approved_yaml():
         assert runtime_methods == approved_methods
 
         for method in approved_methods:
-            approved_responses = set(
-                approved_item[method]["responses"].keys()
-            )
-            runtime_responses = set(
-                runtime_item[method]["responses"].keys()
-            )
+            approved_responses = set(approved_item[method]["responses"].keys())
+            runtime_responses = set(runtime_item[method]["responses"].keys())
             assert runtime_responses == approved_responses
 
         approved_parameters = item_parameter_names(

@@ -26,6 +26,7 @@ def test_server_error_raises_shard_unavailable():
             "user-1",
         )
 
+
 def test_unavailable_responsible_shard_has_no_fallback():
     requested_urls = []
 
@@ -62,9 +63,8 @@ def test_unavailable_responsible_shard_has_no_fallback():
         backend.read("Users", "user-1")
 
     assert len(requested_urls) == 1
-    assert requested_urls[0].startswith(
-        str(registration.base_url).rstrip("/")
-    )
+    assert requested_urls[0].startswith(str(registration.base_url).rstrip("/"))
+
 
 def test_connection_error_raises_shard_unavailable():
     def handler(request):
@@ -82,4 +82,3 @@ def test_connection_error_raises_shard_unavailable():
             "Users",
             "user-1",
         )
-        

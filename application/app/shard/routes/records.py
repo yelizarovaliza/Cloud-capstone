@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Path, Request, Response, status
 
 from app.api.routes.tables import problem_response

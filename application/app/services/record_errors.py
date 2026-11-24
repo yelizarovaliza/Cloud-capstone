@@ -1,4 +1,3 @@
-
 class ShardUnavailableError(Exception):
     """Raised when the responsible Shard cannot be reached."""
 

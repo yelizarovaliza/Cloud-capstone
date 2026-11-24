@@ -75,9 +75,7 @@ def test_register_table_with_invalid_primary_key_returns_400(
     response = client.post("/v1/tables", json=table)
 
     assert response.status_code == 400
-    assert response.headers["content-type"].startswith(
-        "application/problem+json"
-    )
+    assert response.headers["content-type"].startswith("application/problem+json")
 
 
 def test_register_table_with_invalid_name_returns_400(
@@ -106,6 +104,4 @@ def test_get_missing_table_returns_404(client: TestClient):
     response = client.get("/v1/tables/Unknown")
 
     assert response.status_code == 404
-    assert response.headers["content-type"].startswith(
-        "application/problem+json"
-    )
+    assert response.headers["content-type"].startswith("application/problem+json")

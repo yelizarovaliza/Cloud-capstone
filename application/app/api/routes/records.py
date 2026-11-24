@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Path, Response, status
 
 from app.api.routes.tables import problem_response
@@ -16,7 +15,9 @@ from app.services.record_service import RecordAlreadyExistsError
 def table_registry_contains(table_name: str) -> bool:
     return table_registry.get(table_name) is not None
 
+
 router = APIRouter(prefix="/v1/tables", tags=["Records"])
+
 
 @router.post(
     "/{tableName}/records/{partitionKey}",
@@ -45,7 +46,9 @@ def create_record(
     ),
 ):
     if not table_registry_contains(tableName):
-        return problem_response(404, "Table not found", f"Table '{tableName}' is not registered.")
+        return problem_response(
+            404, "Table not found", f"Table '{tableName}' is not registered."
+        )
 
     try:
         return record_service.create(
@@ -54,9 +57,13 @@ def create_record(
             payload.value,
         )
     except ShardUnavailableError:
-        return problem_response(503, "Shard unavailable", "No responsible Shard is available.")
+        return problem_response(
+            503, "Shard unavailable", "No responsible Shard is available."
+        )
     except RecordAlreadyExistsError:
-        return problem_response(409, "Record already exists", "The partition key is already in use.")
+        return problem_response(
+            409, "Record already exists", "The partition key is already in use."
+        )
 
 
 @router.get(
@@ -83,15 +90,21 @@ def read_record(
     ),
 ):
     if not table_registry_contains(tableName):
-        return problem_response(404, "Table not found", f"Table '{tableName}' is not registered.")
+        return problem_response(
+            404, "Table not found", f"Table '{tableName}' is not registered."
+        )
 
     try:
         record = record_service.read(tableName, partitionKey)
     except ShardUnavailableError:
-        return problem_response(503, "Shard unavailable", "No responsible Shard is available.")
+        return problem_response(
+            503, "Shard unavailable", "No responsible Shard is available."
+        )
 
     if record is None:
-        return problem_response(404, "Record not found", "The requested record does not exist.")
+        return problem_response(
+            404, "Record not found", "The requested record does not exist."
+        )
 
     return record
 
@@ -120,12 +133,16 @@ def exists_record(
     ),
 ):
     if not table_registry_contains(tableName):
-        return problem_response(404, "Table not found", f"Table '{tableName}' is not registered.")
+        return problem_response(
+            404, "Table not found", f"Table '{tableName}' is not registered."
+        )
 
     try:
         exists = record_service.exists(tableName, partitionKey)
     except ShardUnavailableError:
-        return problem_response(503, "Shard unavailable", "No responsible Shard is available.")
+        return problem_response(
+            503, "Shard unavailable", "No responsible Shard is available."
+        )
 
     return ExistsResult(
         tableName=tableName,
@@ -158,14 +175,20 @@ def delete_record(
     ),
 ):
     if not table_registry_contains(tableName):
-        return problem_response(404, "Table not found", f"Table '{tableName}' is not registered.")
+        return problem_response(
+            404, "Table not found", f"Table '{tableName}' is not registered."
+        )
 
     try:
         deleted = record_service.delete(tableName, partitionKey)
     except ShardUnavailableError:
-        return problem_response(503, "Shard unavailable", "No responsible Shard is available.")
+        return problem_response(
+            503, "Shard unavailable", "No responsible Shard is available."
+        )
 
     if not deleted:
-        return problem_response(404, "Record not found", "The requested record does not exist.")
+        return problem_response(
+            404, "Record not found", "The requested record does not exist."
+        )
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)

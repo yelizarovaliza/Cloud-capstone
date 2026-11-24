@@ -32,9 +32,7 @@ def test_register_new_shard(registry):
 
     assert created is True
     assert stored.shard_id == "shard-1"
-    assert str(stored.base_url).rstrip("/") == (
-        "http://127.0.0.1:8001"
-    )
+    assert str(stored.base_url).rstrip("/") == ("http://127.0.0.1:8001")
     assert len(registry.get_all()) == 1
 
 
@@ -54,9 +52,7 @@ def test_repeated_registration_refreshes_existing_shard(registry):
     assert created_first is True
     assert created_second is False
     assert len(registry.get_all()) == 1
-    assert str(stored.base_url).rstrip("/") == (
-        "http://127.0.0.1:8011"
-    )
+    assert str(stored.base_url).rstrip("/") == ("http://127.0.0.1:8011")
 
 
 def test_different_shards_cannot_use_same_address(registry):

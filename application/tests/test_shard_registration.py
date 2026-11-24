@@ -82,9 +82,7 @@ def test_shard_registers_during_startup(monkeypatch):
         shard_id: str,
         base_url: str,
     ) -> dict:
-        calls.append(
-            (coordinator_url, shard_id, base_url)
-        )
+        calls.append((coordinator_url, shard_id, base_url))
         return {
             "shardId": shard_id,
             "registered": True,

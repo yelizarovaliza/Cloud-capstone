@@ -59,9 +59,7 @@ def test_repeated_registration_returns_200(client):
 
     stored = shard_registry.get("shard-1")
     assert stored is not None
-    assert str(stored.base_url).rstrip("/") == (
-        "http://127.0.0.1:8011"
-    )
+    assert str(stored.base_url).rstrip("/") == ("http://127.0.0.1:8011")
 
 
 def test_different_shard_with_same_address_returns_409(client):
@@ -82,9 +80,7 @@ def test_different_shard_with_same_address_returns_409(client):
     )
 
     assert response.status_code == 409
-    assert response.headers["content-type"].startswith(
-        "application/problem+json"
-    )
+    assert response.headers["content-type"].startswith("application/problem+json")
     assert len(shard_registry.get_all()) == 1
 
 
@@ -98,17 +94,13 @@ def test_invalid_registration_returns_400(client):
     )
 
     assert response.status_code == 400
-    assert response.headers["content-type"].startswith(
-        "application/problem+json"
-    )
+    assert response.headers["content-type"].startswith("application/problem+json")
 
 
 def test_registration_endpoint_is_in_runtime_openapi(client):
     schema = client.get("/openapi.json").json()
 
-    operation = schema["paths"][
-        "/v1/internal/shards/register"
-    ]["post"]
+    operation = schema["paths"]["/v1/internal/shards/register"]["post"]
 
     assert "201" in operation["responses"]
     assert "200" in operation["responses"]

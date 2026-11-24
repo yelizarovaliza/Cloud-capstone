@@ -23,13 +23,13 @@ router = APIRouter(
     response_model=ShardRegistrationResult,
     response_model_by_alias=True,
     responses={
-    200: {
-        "model": ShardRegistrationResult,
-        "description": "Shard registration refreshed",
+        200: {
+            "model": ShardRegistrationResult,
+            "description": "Shard registration refreshed",
+        },
+        400: {"description": "Invalid registration request"},
+        409: {"description": "Shard address already belongs to another Shard"},
     },
-    400: {"description": "Invalid registration request"},
-    409: {"description": "Shard address already belongs to another Shard"},
-},
 )
 def register_shard(
     payload: ShardRegistration,
@@ -46,11 +46,7 @@ def register_shard(
             detail=str(exc),
         )
 
-    response.status_code = (
-        status.HTTP_201_CREATED
-        if created
-        else status.HTTP_200_OK
-    )
+    response.status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
 
     return ShardRegistrationResult(
         shardId=registration.shard_id,

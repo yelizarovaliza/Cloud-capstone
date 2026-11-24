@@ -1,4 +1,3 @@
-
 import pytest
 from fastapi.testclient import TestClient
 
@@ -102,18 +101,14 @@ def test_exists_record(client):
         json={"value": {"email": "user@example.com"}},
     )
 
-    response = client.get(
-        "/v1/tables/Users/records/user-1/exists"
-    )
+    response = client.get("/v1/tables/Users/records/user-1/exists")
 
     assert response.status_code == 200
     assert response.json()["exists"] is True
 
 
 def test_exists_missing_record(client):
-    response = client.get(
-        "/v1/tables/Users/records/missing/exists"
-    )
+    response = client.get("/v1/tables/Users/records/missing/exists")
 
     assert response.status_code == 200
     assert response.json()["exists"] is False
@@ -197,7 +192,5 @@ def test_unavailable_shard_returns_503(
     )
 
     assert response.status_code == 503
-    assert response.headers["content-type"].startswith(
-        "application/problem+json"
-    )
+    assert response.headers["content-type"].startswith("application/problem+json")
     assert response.json()["status"] == 503

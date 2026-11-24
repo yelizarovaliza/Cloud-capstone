@@ -1,4 +1,3 @@
-
 import httpx
 import pytest
 from fastapi.testclient import TestClient
@@ -65,7 +64,6 @@ def distributed_environment(tmp_path, monkeypatch):
             )
 
             with TestClient(shard_app) as shard_client:
-
                 # Register a second Shard that will be unavailable.
                 registration_response = coordinator_client.post(
                     "/v1/internal/shards/register",
@@ -79,13 +77,12 @@ def distributed_environment(tmp_path, monkeypatch):
 
                 calls = []
 
-                
                 def dispatch_shard_request(
                     request: httpx.Request,
                 ) -> httpx.Response:
-                    base_url = str(
-                        request.url.copy_with(path="", query=None)
-                    ).rstrip("/")
+                    base_url = str(request.url.copy_with(path="", query=None)).rstrip(
+                        "/"
+                    )
 
                     calls.append(base_url)
 
@@ -120,9 +117,7 @@ def distributed_environment(tmp_path, monkeypatch):
                         request=request,
                     )
 
-                transport = httpx.MockTransport(
-                    dispatch_shard_request
-                )
+                transport = httpx.MockTransport(dispatch_shard_request)
 
                 router = ShardRouter(shard_registry)
 
@@ -171,9 +166,7 @@ def find_key_for_shard(router, shard_id):
         if registration.shard_id == shard_id:
             return partition_key
 
-    raise AssertionError(
-        f"Could not find a key assigned to {shard_id}"
-    )
+    raise AssertionError(f"Could not find a key assigned to {shard_id}")
 
 
 def test_registration_routing_and_read_after_write(
@@ -196,9 +189,7 @@ def test_registration_routing_and_read_after_write(
         "shard-1",
     )
 
-    record_url = (
-        f"/v1/tables/Users/records/{partition_key}"
-    )
+    record_url = f"/v1/tables/Users/records/{partition_key}"
 
     # CREATE
     create_response = client.post(
@@ -221,19 +212,14 @@ def test_registration_routing_and_read_after_write(
     }
 
     # EXISTS
-    exists_response = client.get(
-        f"{record_url}/exists"
-    )
+    exists_response = client.get(f"{record_url}/exists")
 
     assert exists_response.status_code == 200
     assert exists_response.json()["exists"] is True
 
     # All operations must reach the same responsible Shard.
     assert calls
-    assert all(
-        base_url == live_base_url
-        for base_url in calls
-    )
+    assert all(base_url == live_base_url for base_url in calls)
 
 
 def test_unavailable_shard_returns_503_without_fallback(
@@ -242,9 +228,7 @@ def test_unavailable_shard_returns_503_without_fallback(
     client = distributed_environment["coordinator"]
     router = distributed_environment["router"]
     calls = distributed_environment["calls"]
-    unavailable_base_url = distributed_environment[
-        "unavailable_base_url"
-    ]
+    unavailable_base_url = distributed_environment["unavailable_base_url"]
 
     register_users_table(client)
 
@@ -266,8 +250,6 @@ def test_unavailable_shard_returns_503_without_fallback(
     )
 
     assert response.status_code == 503
-    assert response.headers["content-type"].startswith(
-        "application/problem+json"
-    )
+    assert response.headers["content-type"].startswith("application/problem+json")
 
     assert calls == [unavailable_base_url]

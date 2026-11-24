@@ -1,4 +1,3 @@
-
 from threading import RLock
 
 from app.services.consistent_hash import ConsistentHashRing
@@ -42,8 +41,7 @@ class ShardRouter:
             )
 
         registrations_by_id = {
-            registration.shard_id: registration
-            for registration in registrations
+            registration.shard_id: registration for registration in registrations
         }
 
         current_ids = tuple(sorted(registrations_by_id))
@@ -51,9 +49,7 @@ class ShardRouter:
         with self._lock:
             if current_ids != self._member_ids:
                 new_ring = ConsistentHashRing(
-                    virtual_nodes_per_shard=(
-                        self.virtual_nodes_per_shard
-                    )
+                    virtual_nodes_per_shard=(self.virtual_nodes_per_shard)
                 )
 
                 for shard_id in current_ids:

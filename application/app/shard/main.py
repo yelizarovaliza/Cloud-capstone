@@ -1,4 +1,3 @@
-
 import os
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -14,9 +13,7 @@ def required_env(name: str) -> str:
     value = os.getenv(name)
 
     if not value:
-        raise RuntimeError(
-            f"Required environment variable '{name}' is not set."
-        )
+        raise RuntimeError(f"Required environment variable '{name}' is not set.")
 
     return value
 

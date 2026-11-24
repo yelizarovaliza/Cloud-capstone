@@ -1,4 +1,3 @@
-
 import pytest
 
 from app.schemas.record_response import Record
@@ -13,9 +12,7 @@ class FakeShardClient:
         self.calls = []
 
     def create(self, base_url, table_name, partition_key, value):
-        self.calls.append(
-            ("create", base_url, table_name, partition_key)
-        )
+        self.calls.append(("create", base_url, table_name, partition_key))
         return Record(
             tableName=table_name,
             partitionKey=partition_key,
@@ -23,9 +20,7 @@ class FakeShardClient:
         )
 
     def read(self, base_url, table_name, partition_key):
-        self.calls.append(
-            ("read", base_url, table_name, partition_key)
-        )
+        self.calls.append(("read", base_url, table_name, partition_key))
         return Record(
             tableName=table_name,
             partitionKey=partition_key,
@@ -33,15 +28,11 @@ class FakeShardClient:
         )
 
     def exists(self, base_url, table_name, partition_key):
-        self.calls.append(
-            ("exists", base_url, table_name, partition_key)
-        )
+        self.calls.append(("exists", base_url, table_name, partition_key))
         return True
 
     def delete(self, base_url, table_name, partition_key):
-        self.calls.append(
-            ("delete", base_url, table_name, partition_key)
-        )
+        self.calls.append(("delete", base_url, table_name, partition_key))
         return True
 
 
@@ -83,9 +74,7 @@ def test_all_operations_use_the_same_shard(routing_setup):
         table_name,
         partition_key,
     )
-    expected_url = str(
-        expected_registration.base_url
-    ).rstrip("/")
+    expected_url = str(expected_registration.base_url).rstrip("/")
 
     created = backend.create(
         table_name,
@@ -103,10 +92,7 @@ def test_all_operations_use_the_same_shard(routing_setup):
 
     assert len(client.calls) == 4
 
-    assert all(
-        call[1] == expected_url
-        for call in client.calls
-    )
+    assert all(call[1] == expected_url for call in client.calls)
 
     assert [call[0] for call in client.calls] == [
         "create",
@@ -178,9 +164,7 @@ def test_repeated_registration_does_not_duplicate_ring_nodes(
     assert router.ring.ring_size == 2 * 128
 
     if registration.shard_id == "shard-1":
-        assert str(registration.base_url).rstrip("/") == (
-            "http://127.0.0.1:8011"
-        )
+        assert str(registration.base_url).rstrip("/") == ("http://127.0.0.1:8011")
 
 
 def test_empty_registry_has_no_responsible_shard():

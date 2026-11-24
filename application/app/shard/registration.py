@@ -9,10 +9,7 @@ async def register_with_coordinator(
 ) -> dict:
     """Register this Shard with the Coordinator."""
 
-    endpoint = (
-        f"{coordinator_url.rstrip('/')}"
-        "/v1/internal/shards/register"
-    )
+    endpoint = f"{coordinator_url.rstrip('/')}/v1/internal/shards/register"
 
     payload = {
         "shardId": shard_id,

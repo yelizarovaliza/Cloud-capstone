@@ -1,4 +1,3 @@
-
 from typing import Protocol
 
 from app.schemas.record_response import Record
@@ -17,29 +16,25 @@ class RecordBackend(Protocol):
         table_name: str,
         partition_key: str,
         value: dict,
-    ) -> Record:
-        ...
+    ) -> Record: ...
 
     def read(
         self,
         table_name: str,
         partition_key: str,
-    ) -> Record | None:
-        ...
+    ) -> Record | None: ...
 
     def exists(
         self,
         table_name: str,
         partition_key: str,
-    ) -> bool:
-        ...
+    ) -> bool: ...
 
     def delete(
         self,
         table_name: str,
         partition_key: str,
-    ) -> bool:
-        ...
+    ) -> bool: ...
 
 
 class RecordService:

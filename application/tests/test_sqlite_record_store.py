@@ -1,4 +1,3 @@
-
 import pytest
 
 from app.schemas.record_response import Record

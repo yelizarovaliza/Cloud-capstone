@@ -30,7 +30,9 @@ def test_record_value_must_be_an_object():
 
 def test_record_input_rejects_unknown_top_level_fields():
     with pytest.raises(ValidationError):
-        RecordInput.model_validate({
-            "value": {"email": "user@example.com"},
-            "partitionKey": "user-1",
-        })
+        RecordInput.model_validate(
+            {
+                "value": {"email": "user@example.com"},
+                "partitionKey": "user-1",
+            }
+        )

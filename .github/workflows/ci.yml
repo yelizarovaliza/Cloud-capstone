@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - milestone-2
+  pull_request:
+    branches:
+      - milestone-2
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality-and-build:
+    name: Format, Tests, OpenAPI and Docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: application/pyproject.toml
+
+      - name: Install application and test dependencies
+        working-directory: application
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[test]"
+
+      - name: Check Python formatting
+        working-directory: application
+        run: python -m ruff format --check app tests
+
+      - name: Run tests
+        working-directory: application
+        run: python -m pytest
+
+      - name: Validate OpenAPI specification
+        run: |
+          python -c "import yaml; from openapi_spec_validator import validate_spec; spec=yaml.safe_load(open('docs/api/openapi.yaml', encoding='utf-8')); validate_spec(spec); print('OpenAPI specification is valid.')"
+
+      - name: Build Docker image
+        run: docker build -t cloud-capstone:${{ github.sha }} -f application/Dockerfile application

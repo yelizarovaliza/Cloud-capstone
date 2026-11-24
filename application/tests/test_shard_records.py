@@ -1,4 +1,3 @@
-
 import pytest
 from fastapi.testclient import TestClient
 
@@ -99,9 +98,7 @@ def test_create_duplicate_returns_409(client):
 
     assert first.status_code == 201
     assert second.status_code == 409
-    assert second.headers["content-type"].startswith(
-        "application/problem+json"
-    )
+    assert second.headers["content-type"].startswith("application/problem+json")
 
     # The original value must not be overwritten.
     response = client.get(url)

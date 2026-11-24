@@ -39,6 +39,7 @@ app.include_router(tables_router)
 app.include_router(records_router)
 app.include_router(shards_router)
 
+
 def custom_openapi() -> dict:
     if app.openapi_schema:
         return app.openapi_schema

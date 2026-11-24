@@ -1,4 +1,3 @@
-
 from bisect import bisect_left
 from hashlib import sha256
 
@@ -22,9 +21,7 @@ class ConsistentHashRing:
             or isinstance(virtual_nodes_per_shard, bool)
             or virtual_nodes_per_shard < 1
         ):
-            raise ValueError(
-                "virtual_nodes_per_shard must be a positive integer."
-            )
+            raise ValueError("virtual_nodes_per_shard must be a positive integer.")
 
         self.virtual_nodes_per_shard = virtual_nodes_per_shard
 
@@ -45,9 +42,7 @@ class ConsistentHashRing:
     ) -> str:
         """Build the table-qualified key used for routing."""
         if not table_name or not partition_key:
-            raise ValueError(
-                "table_name and partition_key must not be empty."
-            )
+            raise ValueError("table_name and partition_key must not be empty.")
 
         return f"{table_name}#{partition_key}"
 
@@ -87,11 +82,7 @@ class ConsistentHashRing:
         if shard_id not in self._shards:
             return False
 
-        self._ring = [
-            point
-            for point in self._ring
-            if point[1] != shard_id
-        ]
+        self._ring = [point for point in self._ring if point[1] != shard_id]
 
         self._shards.remove(shard_id)
         return True

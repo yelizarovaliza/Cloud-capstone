@@ -1,4 +1,3 @@
-
 import json
 import sqlite3
 from contextlib import closing
@@ -70,9 +69,7 @@ class SQLiteRecordStore:
                         ),
                     )
         except sqlite3.IntegrityError as exc:
-            raise RecordAlreadyExistsError(
-                "The record already exists."
-            ) from exc
+            raise RecordAlreadyExistsError("The record already exists.") from exc
 
         return Record(
             tableName=table_name,

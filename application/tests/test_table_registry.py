@@ -1,4 +1,3 @@
-
 from app.schemas.table import TableDefinition
 from app.services.table_registry import TableRegistry
 
