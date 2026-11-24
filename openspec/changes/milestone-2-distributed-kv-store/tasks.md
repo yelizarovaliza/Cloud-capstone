@@ -32,8 +32,8 @@
 
 ## 5. CI/CD
 
-- [ ] 5.1 Create CI stages for format, tests, OpenAPI validation, and Docker build; verify pull requests receive automated results.
-- [ ] 5.2 Add Terraform formatting and validation plus plan artifacts; verify generated plans contain no sensitive state or credentials.
+- [x] 5.1 Create CI stages for format, tests, OpenAPI validation, and Docker build; verify pull requests receive automated results.
+- [x] 5.2 Add Terraform formatting and validation plus plan artifacts; verify generated plans contain no sensitive state or credentials.
 - [ ] 5.3 Add protected deployment stages and secret handling; verify deployment requires approval and no secret exists in repository files.
 - [ ] 5.4 Add deployment verification; verify health and smoke tests are required before the pipeline reports success.
 

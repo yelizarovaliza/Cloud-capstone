@@ -68,3 +68,49 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t cloud-capstone:${{ github.sha }} -f application/Dockerfile application
+
+      - name: Run application container
+        run: |
+          docker run -d \
+            --name cloud-capstone-smoke \
+            -p 8000:8000 \
+            cloud-capstone:${{ github.sha }}
+
+      - name: Smoke test application
+        run: |
+          for attempt in $(seq 1 20); do
+            if curl --silent --fail http://127.0.0.1:8000/health -o health.json; then
+              python -c "import json; assert json.load(open('health.json')) == {'status': 'ok'}"
+              curl --fail --silent http://127.0.0.1:8000/openapi.json -o /dev/null
+              echo "Health check and OpenAPI smoke test passed."
+              exit 0
+            fi
+            sleep 2
+          done
+
+          docker logs cloud-capstone-smoke
+          echo "Application failed to become healthy."
+          exit 1
+
+      - name: Clean up smoke test container
+        if: always()
+        run: docker rm -f cloud-capstone-smoke || true
+
+  deployment-gate:
+    name: Protected deployment approval
+    runs-on: ubuntu-latest
+    needs: quality-and-build
+    if: github.event_name == 'workflow_dispatch'
+
+    environment:
+      name: deployment
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Confirm deployment gate reached
+        run: |
+          echo "Deployment gate reached."
+          echo "Actual deployment is not configured yet."
+          echo "No AWS credentials or secrets were used."
