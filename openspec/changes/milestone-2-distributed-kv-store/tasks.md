@@ -39,10 +39,10 @@
 
 ## 6. YCSB Benchmark
 
-- [ ] 6.1 Implement or configure YCSB binding for the public API; verify smoke workloads execute without transport errors.
-- [ ] 6.2 Select and document workload, record count, operation count, and concurrency; verify a benchmark configuration file or command reproduces the run.
-- [ ] 6.3 Execute the approved benchmark; verify throughput, average, p95, p99, and error-rate metrics are recorded.
-- [ ] 6.4 Publish the baseline report and environment metadata; verify values are marked measured or not measured, with no invented results.
+- [x] 6.1 Implement or configure YCSB binding for the public API; verify smoke workloads execute without transport errors.
+- [x] 6.2 Select and document workload, record count, operation count, and concurrency; verify a benchmark configuration file or command reproduces the run.
+- [x] 6.3 Execute the approved benchmark; verify throughput, average, p95, p99, and error-rate metrics are recorded.
+- [x] 6.4 Publish the baseline report and environment metadata; verify values are marked measured or not measured, with no invented results.
 
 ## 7. Architecture and Traceability
 
