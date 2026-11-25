@@ -101,7 +101,78 @@ The unavailable-Shard scenario is simulated by raising an HTTP connection error 
 
 The current integration tests execute requests sequentially. They do not constitute a concurrent load test and do not measure throughput, contention, or race-condition behavior under parallel requests.
 
-## 6. Explicitly Out of Scope
+## 6. YCSB Benchmark Results
+
+### Benchmark environment
+
+The M2 YCSB benchmark was executed locally against the Python FastAPI Coordinator and two independently running Shards.
+
+| Parameter            | Value                                 |
+| -------------------- | ------------------------------------- |
+| Benchmark            | Yahoo! Cloud Serving Benchmark (YCSB) |
+| YCSB version         | 0.17.0                                |
+| Binding              | Custom Java `CloudCapstoneYcsbClient` |
+| Workload             | Workload D                            |
+| Record count         | 100                                   |
+| Operation count      | 100                                   |
+| Thread count         | 1                                     |
+| Request distribution | `latest`                              |
+| Coordinator          | `http://localhost:8000`               |
+| Shard 1              | `http://localhost:8001`               |
+| Shard 2              | `http://localhost:8002`               |
+
+### Load phase
+
+The Load phase inserted 100 records.
+
+| Metric                  |         Result |
+| ----------------------- | -------------: |
+| Operations              |     100 INSERT |
+| Successful operations   |            100 |
+| Failed operations       |              0 |
+| Runtime                 |     241,940 ms |
+| Throughput              | 0.4133 ops/sec |
+| Average latency         |    2,416.49 ms |
+| Minimum latency         |    2,199.55 ms |
+| Maximum latency         |   18,120.70 ms |
+| 95th percentile latency |    2,328.58 ms |
+| 99th percentile latency |    2,512.90 ms |
+
+### Run phase
+
+The Run phase executed 100 operations: 95 READ operations and 5 INSERT operations.
+
+| Metric                  |        READ |      INSERT |
+| ----------------------- | ----------: | ----------: |
+| Operations              |          95 |           5 |
+| Successful operations   |          95 |           5 |
+| Failed operations       |           0 |           0 |
+| Average latency         | 2,236.71 ms | 2,261.20 ms |
+| Minimum latency         | 2,195.46 ms | 2,244.61 ms |
+| Maximum latency         | 2,326.53 ms | 2,279.42 ms |
+| 95th percentile latency | 2,275.33 ms | 2,279.42 ms |
+| 99th percentile latency | 2,295.81 ms | 2,279.42 ms |
+
+Overall Run metrics:
+
+- Runtime: 224,121 ms.
+- Throughput: 0.4462 ops/sec.
+- Total successful operations: 100.
+- Failed operations: 0.
+
+### Interpretation and limitations
+
+Both phases completed with 100% successful operations in the reported YCSB output.
+
+The measured throughput was approximately 0.41 ops/sec during Load and 0.45 ops/sec during Run. The observed average operation latency was approximately 2.2–2.4 seconds.
+
+These results represent a local baseline for the tested configuration. They are not AWS deployment measurements and should not be interpreted as production performance guarantees.
+
+The benchmark used one thread. It therefore measures sequential request behavior and does not establish concurrent-load performance, contention limits, or race-condition guarantees.
+
+The results can serve as a reference point for later milestone comparisons. Performance changes should be evaluated using the same workload and comparable environment.
+
+## 7. Explicitly Out of Scope
 
 The following guarantees are not implemented or claimed in M2:
 
@@ -115,7 +186,7 @@ The following guarantees are not implemented or claimed in M2:
 
 These capabilities may be evaluated in later milestones if required by the approved architecture.
 
-## 7. Conclusion
+## 8. Conclusion
 
 M2 provides deterministic key routing, local SQLite persistence, protection against duplicate record creation, and explicit handling of unavailable Shards.
 

@@ -5,11 +5,21 @@
 The M2 technology stack and architecture decisions ADR-004,
 ADR-005, and ADR-006 are Accepted.
 
-The initial Python application scaffold has been created
-with FastAPI and a basic health-check endpoint.
+The Python application has been implemented using FastAPI.
+The implementation includes a Coordinator, independent Shards,
+local SQLite storage, a public JSON API, internal Shard operations,
+and consistent-hash routing.
 
-The Coordinator, Shards, key-value operations, and M2 AWS
-resources have not yet been implemented or deployed.
+The Coordinator and two Shards have been started and tested locally.
+Shard registration, record creation, and read-after-write behavior
+have been verified through the running application.
+
+A custom Java YCSB binding has been implemented and used to run
+Workload D locally. The Load and Run results are recorded in
+`docs/testing/concurrency-and-test-behavior.md`.
+
+AWS deployment has not been performed. Terraform plans and local
+benchmark results do not constitute evidence of a live AWS deployment.
 
 ## 2. Logical Architecture
 
@@ -83,10 +93,12 @@ Successful CREATE operations are read-after-write visible through the same Coord
 
 The existing M1 network remains the baseline:
 
-- VPC: `10.0.0.0/16`
-- Public subnet: `10.0.1.0/24`
-- Private subnet: `10.0.2.0/24`
+- VPC: `172.31.0.0/16`
+- Public subnet: `172.31.80.0/20`
+- Private subnet: `172.31.96.0/20`
 - Region/AZ: `us-east-1` / `us-east-1a`
+
+The M2 infrastructure has been reviewed through Terraform configuration and planning. No live AWS deployment is claimed.
 
 The Coordinator belongs in public placement only when client access is required. Shards belong in private placement. Security Groups permit public traffic only to the Coordinator and Shard traffic only from the Coordinator.
 
@@ -102,4 +114,21 @@ CI validates source, API contracts, tests, Docker builds, Terraform formatting, 
 
 ## 11. YCSB
 
-YCSB integration is a future implementation task. The baseline report shall record workload, data size, operations, concurrency, throughput, average/p95/p99 latency, error rate, and environment. No baseline value is claimed until measured.
+A custom Java binding, `CloudCapstoneYcsbClient`, integrates YCSB
+0.17.0 with the Coordinator's public HTTP API.
+
+Workload D was executed locally with 100 records, 100 operations,
+and one thread.
+
+The Load phase completed 100 INSERT operations successfully.
+The Run phase completed 95 READ and 5 INSERT operations successfully.
+
+The measured throughput was 0.4133 ops/sec during Load and
+0.4462 ops/sec during Run.
+
+Both phases reported zero failed operations. Detailed runtime,
+latency, and percentile metrics are recorded in
+`docs/testing/concurrency-and-test-behavior.md`.
+
+These measurements are a local M2 baseline, not AWS deployment
+or production performance results.
